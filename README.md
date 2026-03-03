@@ -1,2 +1,2 @@
 # bootcamp_dtt
-Bootcamp Java - Delotite
+Bootcamp Java - Deloitte
