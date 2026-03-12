@@ -2,7 +2,9 @@ package com.paulo.aplicacao_spring.controller;
 
 import com.paulo.aplicacao_spring.model.Usuario;
 import org.springframework.web.bind.annotation.*;
-import java.util.ArrayList;
+import com.paulo.aplicacao_spring.repository.UsuarioRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+//import java.util.ArrayList;
 import java.util.List;
 
 
@@ -10,20 +12,31 @@ import java.util.List;
 @RequestMapping("/usuarios")
 public class UsuarioController {
 
-    private List<Usuario> usuarios = new ArrayList<>();
+    @Autowired // O Spring "instala" o banco aqui automaticamente
+    private UsuarioRepository repository;
+
+    /*@GetMapping
+    public List<Usuario> listar() {
+        return usuarios; 
+    }*/
 
     @GetMapping
     public List<Usuario> listar() {
-        return usuarios; 
+        return repository.findAll(); // Busca tudo no banco
     }
 
     @PostMapping
+    public Usuario adicionar(@RequestBody Usuario user) {
+        return repository.save(user); // Salva no banco
+    }
+
+    /*@PostMapping
     public String adicionar(@RequestBody Usuario user) {
         usuarios.add(user);
         return "Usuário " + user.getNome() + " cadastrado!";
-    }
+    }*/
 
-    @PutMapping("/{index}") // O {index} na URL é uma variável
+    /*@PutMapping("/{index}") // O {index} na URL é uma variável
     public String atualizar(@PathVariable int index, @RequestBody Usuario usuarioAtualizado) {
     // Verificando se o índice existe na lista para não dar erro de memória
     if (index >= 0 && index < usuarios.size()) {
@@ -42,5 +55,5 @@ public class UsuarioController {
         return "Usuário " + removido.getNome() + " removido com sucesso!";
     }
     return "Erro: Não foi possível encontrar o usuário no índice " + index;
-}
+    }*/
 }
