@@ -5,6 +5,7 @@ import com.paulobezerra.gerenciador_biblioteca.service.LivroService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class LivroController {
     private final LivroService livroService;
 
     @PostMapping
-    public ResponseEntity<Livro> salvar(@RequestBody Livro livro) {
+    public ResponseEntity<Livro> salvar(@Valid @RequestBody Livro livro) {
         return ResponseEntity.ok(livroService.salvar(livro));
     }
 
@@ -31,7 +32,7 @@ public class LivroController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Livro> atualizar(@PathVariable Long id, @RequestBody Livro livro) {
+    public ResponseEntity<Livro> atualizar(@PathVariable Long id, @Valid @RequestBody Livro livro) {
         return ResponseEntity.ok(livroService.atualizar(id, livro));
     }
 

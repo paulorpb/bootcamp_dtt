@@ -5,6 +5,7 @@ import com.paulobezerra.gerenciador_biblioteca.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class UsuarioController {
     private final UsuarioService usuarioService;
 
     @PostMapping
-    public ResponseEntity<Usuario> salvar(@RequestBody Usuario usuario) {
+    public ResponseEntity<Usuario> salvar(@Valid @RequestBody Usuario usuario) {
         return ResponseEntity.ok(usuarioService.salvar(usuario));
     }
 
@@ -31,7 +32,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Usuario> atualizar(@PathVariable Long id, @RequestBody Usuario usuario) {
+    public ResponseEntity<Usuario> atualizar(@PathVariable Long id, @Valid @RequestBody Usuario usuario) {
         return ResponseEntity.ok(usuarioService.atualizar(id, usuario));
     }
 
