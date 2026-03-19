@@ -1,11 +1,14 @@
 package com.paulobezerra.gerenciador_biblioteca.service;
 
+import com.paulobezerra.gerenciador_biblioteca.dto.UsuarioRequestDTO;
+import com.paulobezerra.gerenciador_biblioteca.dto.UsuarioResponseDTO;
 import com.paulobezerra.gerenciador_biblioteca.entity.Usuario;
 import com.paulobezerra.gerenciador_biblioteca.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -13,29 +16,53 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
 
-    public Usuario salvar(Usuario usuario) {
-        return usuarioRepository.save(usuario);
+    private UsuarioResponseDTO toDTO(Usuario usuario) {
+        UsuarioResponseDTO dto = new UsuarioResponseDTO();
+        dto.setId(usuario.getId());
+        dto.setNome(usuario.getNome());
+        dto.setEmail(usuario.getEmail());
+        dto.setTelefone(usuario.getTelefone());
+        return dto;
     }
 
-    public List<Usuario> listarTodos() {
-        return usuarioRepository.findAll();
+    private Usuario toEntity(UsuarioRequestDTO dto) {
+        Usuario usuario = new Usuario();
+        usuario.setNome(dto.getNome());
+        usuario.setEmail(dto.getEmail());
+        usuario.setTelefone(dto.getTelefone());
+        return usuario;
     }
 
-    public Usuario buscarPorId(Long id) {
+    public UsuarioResponseDTO salvar(UsuarioRequestDTO dto) {
+        return toDTO(usuarioRepository.save(toEntity(dto)));
+    }
+
+    public List<UsuarioResponseDTO> listarTodos() {
+        return usuarioRepository.findAll()
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    public UsuarioResponseDTO buscarPorId(Long id) {
+        return toDTO(encontrarPorId(id));
+    }
+
+    public Usuario encontrarPorId(Long id) {
         return usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
     }
 
-    public Usuario atualizar(Long id, Usuario usuarioAtualizado) {
-        Usuario usuario = buscarPorId(id);
-        usuario.setNome(usuarioAtualizado.getNome());
-        usuario.setEmail(usuarioAtualizado.getEmail());
-        usuario.setTelefone(usuarioAtualizado.getTelefone());
-        return usuarioRepository.save(usuario);
+    public UsuarioResponseDTO atualizar(Long id, UsuarioRequestDTO dto) {
+        Usuario usuario = encontrarPorId(id);
+        usuario.setNome(dto.getNome());
+        usuario.setEmail(dto.getEmail());
+        usuario.setTelefone(dto.getTelefone());
+        return toDTO(usuarioRepository.save(usuario));
     }
 
     public void deletar(Long id) {
-        buscarPorId(id);
+        encontrarPorId(id);
         usuarioRepository.deleteById(id);
     }
 }

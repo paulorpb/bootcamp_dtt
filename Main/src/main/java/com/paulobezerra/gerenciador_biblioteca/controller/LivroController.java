@@ -1,11 +1,12 @@
 package com.paulobezerra.gerenciador_biblioteca.controller;
 
-import com.paulobezerra.gerenciador_biblioteca.entity.Livro;
+import com.paulobezerra.gerenciador_biblioteca.dto.LivroRequestDTO;
+import com.paulobezerra.gerenciador_biblioteca.dto.LivroResponseDTO;
 import com.paulobezerra.gerenciador_biblioteca.service.LivroService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -17,23 +18,23 @@ public class LivroController {
     private final LivroService livroService;
 
     @PostMapping
-    public ResponseEntity<Livro> salvar(@Valid @RequestBody Livro livro) {
-        return ResponseEntity.ok(livroService.salvar(livro));
+    public ResponseEntity<LivroResponseDTO> salvar(@Valid @RequestBody LivroRequestDTO dto) {
+        return ResponseEntity.ok(livroService.salvar(dto));
     }
 
     @GetMapping
-    public ResponseEntity<List<Livro>> listarTodos() {
+    public ResponseEntity<List<LivroResponseDTO>> listarTodos() {
         return ResponseEntity.ok(livroService.listarTodos());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Livro> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<LivroResponseDTO> buscarPorId(@PathVariable Long id) {
         return ResponseEntity.ok(livroService.buscarPorId(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Livro> atualizar(@PathVariable Long id, @Valid @RequestBody Livro livro) {
-        return ResponseEntity.ok(livroService.atualizar(id, livro));
+    public ResponseEntity<LivroResponseDTO> atualizar(@PathVariable Long id, @Valid @RequestBody LivroRequestDTO dto) {
+        return ResponseEntity.ok(livroService.atualizar(id, dto));
     }
 
     @DeleteMapping("/{id}")

@@ -1,11 +1,14 @@
 package com.paulobezerra.gerenciador_biblioteca.service;
 
+import com.paulobezerra.gerenciador_biblioteca.dto.LivroRequestDTO;
+import com.paulobezerra.gerenciador_biblioteca.dto.LivroResponseDTO;
 import com.paulobezerra.gerenciador_biblioteca.entity.Livro;
 import com.paulobezerra.gerenciador_biblioteca.repository.LivroRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -13,30 +16,59 @@ public class LivroService {
 
     private final LivroRepository livroRepository;
 
-    public Livro salvar(Livro livro) {
-        return livroRepository.save(livro);
+    private LivroResponseDTO toDTO(Livro livro) {
+        LivroResponseDTO dto = new LivroResponseDTO();
+        dto.setId(livro.getId());
+        dto.setTitulo(livro.getTitulo());
+        dto.setAutor(livro.getAutor());
+        dto.setIsbn(livro.getIsbn());
+        dto.setDisponivel(livro.getDisponivel());
+        return dto;
     }
 
-    public List<Livro> listarTodos() {
-        return livroRepository.findAll();
+    private Livro toEntity(LivroRequestDTO dto) {
+        Livro livro = new Livro();
+        livro.setTitulo(dto.getTitulo());
+        livro.setAutor(dto.getAutor());
+        livro.setIsbn(dto.getIsbn());
+        livro.setDisponivel(true);
+        return livro;
     }
 
-    public Livro buscarPorId(Long id) {
+    public LivroResponseDTO salvar(LivroRequestDTO dto) {
+        return toDTO(livroRepository.save(toEntity(dto)));
+    }
+
+    public List<LivroResponseDTO> listarTodos() {
+        return livroRepository.findAll()
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    public LivroResponseDTO buscarPorId(Long id) {
+        return toDTO(encontrarPorId(id));
+    }
+
+    public Livro encontrarPorId(Long id) {
         return livroRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Livro não encontrado"));
     }
 
-    public Livro atualizar(Long id, Livro livroAtualizado) {
-        Livro livro = buscarPorId(id);
-        livro.setTitulo(livroAtualizado.getTitulo());
-        livro.setAutor(livroAtualizado.getAutor());
-        livro.setIsbn(livroAtualizado.getIsbn());
-        livro.setDisponivel(livroAtualizado.getDisponivel());
+    public LivroResponseDTO atualizar(Long id, LivroRequestDTO dto) {
+        Livro livro = encontrarPorId(id);
+        livro.setTitulo(dto.getTitulo());
+        livro.setAutor(dto.getAutor());
+        livro.setIsbn(dto.getIsbn());
+        return toDTO(livroRepository.save(livro));
+    }
+
+    public Livro salvarEntidade(Livro livro) {
         return livroRepository.save(livro);
     }
 
     public void deletar(Long id) {
-        buscarPorId(id);
+        encontrarPorId(id);
         livroRepository.deleteById(id);
     }
 }

@@ -1,6 +1,6 @@
 package com.paulobezerra.gerenciador_biblioteca.controller;
 
-import com.paulobezerra.gerenciador_biblioteca.entity.Emprestimo;
+import com.paulobezerra.gerenciador_biblioteca.dto.EmprestimoResponseDTO;
 import com.paulobezerra.gerenciador_biblioteca.service.EmprestimoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,19 +16,19 @@ public class EmprestimoController {
     private final EmprestimoService emprestimoService;
 
     @PostMapping
-    public ResponseEntity<Emprestimo> registrar(
+    public ResponseEntity<EmprestimoResponseDTO> registrar(
             @RequestParam Long usuarioId,
             @RequestParam Long livroId) {
         return ResponseEntity.ok(emprestimoService.registrar(usuarioId, livroId));
     }
 
     @GetMapping
-    public ResponseEntity<List<Emprestimo>> listarTodos() {
+    public ResponseEntity<List<EmprestimoResponseDTO>> listarTodos() {
         return ResponseEntity.ok(emprestimoService.listarTodos());
     }
 
     @PutMapping("/{id}/devolver")
-    public ResponseEntity<Emprestimo> devolver(@PathVariable Long id) {
+    public ResponseEntity<EmprestimoResponseDTO> devolver(@PathVariable Long id) {
         return ResponseEntity.ok(emprestimoService.devolver(id));
     }
 }
