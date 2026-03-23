@@ -16,13 +16,14 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/usuarios").permitAll()
-                        .requestMatchers("/h2-console/**").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
+                        //.requestMatchers(HttpMethod.POST, "/usuarios").permitAll()
+                        //.requestMatchers("/h2-console/**").permitAll()
+                        //.anyRequest().authenticated()
                 )
-                .httpBasic(httpBasic -> httpBasic
+                /*.httpBasic(httpBasic -> httpBasic
                         .realmName("Gerenciador Biblioteca")
-                );
+                )*/;
 
         // Necessário para o console H2 funcionar
         http.headers(headers -> headers.frameOptions(frame -> frame.disable()));
