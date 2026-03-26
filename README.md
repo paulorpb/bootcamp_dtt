@@ -10,7 +10,7 @@ Sistema de gerenciamento de empréstimos de livros desenvolvido com Spring Boot,
  
 A aplicação está disponível em:
  
-🔗 **https://app-paulobezerra.azurewebsites.net/index.html**
+🔗 **gerenciador-biblioteca-paulo-f8dec5awhqepaya3.westeurope-01.azurewebsites.net**
  
 ---
  
